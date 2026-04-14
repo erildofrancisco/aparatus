@@ -19,7 +19,7 @@ model Barbershop {
   address   String
   description String
   imageUrl String
-  phone     String[]
+  phones     String[]
   services  BarbershopService[]
   createdAt DateTime @default(now())
 }
