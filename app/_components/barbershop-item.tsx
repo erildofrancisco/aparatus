@@ -11,6 +11,7 @@ export function BarbershopItem({ barbershop }: BarbershopItemProps) {
     <Link
       href={`/barbershops/${barbershop.id}`}
       as={`/barbershops/${barbershop.id}`}
+      prefetch={false} //pesquisar o que essa propriedade faz
       className="relative min-h-50 min-w-72.5 rounded-xl"
     >
       <div className="absolute top-0 left-0 z-10 h-full w-full rounded-lg bg-linear-to-t from-black to-transparent" />
