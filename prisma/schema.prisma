@@ -14,36 +14,99 @@ datasource db {
 }
 
 model Barbershop {
-  id        String   @id @default(uuid())
-  name      String
-  address   String
+  id          String              @id @default(uuid())
+  name        String
+  address     String
   description String
-  imageUrl String
-  phones     String[]
-  services  BarbershopService[]
-  createdAt DateTime @default(now())
+  imageUrl    String
+  phones      String[]
+  services    BarbershopService[]
+  createdAt   DateTime            @default(now())
 }
 
 model BarbershopService {
-  id          String   @id @default(uuid())
+  id           String @id @default(uuid())
   barbershopId String
-  name        String
-  description String
-  imageUrl String
-  priceInCents       Int
+  name         String
+  description  String
+  imageUrl     String
+  priceInCents Int
 
   barbershop Barbershop @relation(fields: [barbershopId], references: [id])
 }
 
 model Booking {
-  id          String   @id @default(uuid())
+  id           String    @id @default(uuid())
   barbershopId String
   serviceId    String
-  date DateTime @db.Timestamptz
-  cancelled   Boolean? @default(false)
-  cancelledAt DateTime? @db.Timestamptz
+  date         DateTime  @db.Timestamptz
+  cancelled    Boolean?  @default(false)
+  cancelledAt  DateTime? @db.Timestamptz
 }
 
 //o preco - nao salvar valores monetarios como decimal no banco, o recomendado e salvar como centavos e inteiro no banco de dados e na aplicacao dividir por 100
 
 //datas - o timestamptz salva ja com o fuso horario que eh o UTC, sempre salva datas com timestamptz
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
