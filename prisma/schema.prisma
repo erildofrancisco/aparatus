@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Barbershop {
+  id          String              @id @default(cuid())
+  name        String
+  address     String
+  description String
+  imageUrl    String
+  phone       String[]
+  services    BarbershopService[]
+}
+
+model BarbershopService {
+  id           String      @id @default(cuid())
+  name         String
+  description  String
+  imageUrl     String
+  barbershop   Barbershop? @relation(fields: [barbershopId], references: [id])
+  barbershopId String?
+}
+
+model Booking {
+  id          String    @id @default(cuid())
+  date        DateTime  @db.Timestamptz()
+  cancelled   Boolean?  @default(false)
+  cancelledAt DateTime? @db.Timestamptz()
+}
+
+/**
+ * a melhor forma de salvar price no db é centavos [inteiros].
+ * datetime - traz o dia e o horario
+ * temos 2 formas de salvar timestamp no postgres
+ * timestamp e timestamptz
+ * o timestamptz vc salva ja com o horario em (UTC).
+ */
