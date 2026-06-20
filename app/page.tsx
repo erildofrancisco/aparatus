@@ -34,6 +34,7 @@ export default async function Home() {
           className="h-auto w-full"
           alt="Agende agora!"
           sizes="100vw"
+          loading="eager"
         />
         <PageSection>
           <PageSectionTitle>Agendamentos</PageSectionTitle>
