@@ -97,7 +97,11 @@ export default async function BarbershopPage(
           <PageSectionTitle>Serviços</PageSectionTitle>
           <PageSectionScroller>
             {barbershop.services.map((service) => (
-              <ServiceItem key={service.id} service={service} />
+              <ServiceItem
+                key={service.id}
+                service={service}
+                barbershop={barbershop}
+              />
             ))}
           </PageSectionScroller>
         </PageSection>
