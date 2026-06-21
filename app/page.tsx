@@ -29,13 +29,7 @@ export default async function Home() {
       <Header />;
       <PageContainer>
         <SearchInput />
-        <Image
-          src={banner}
-          className="h-auto w-full"
-          alt="Agende agora!"
-          sizes="100vw"
-          loading="eager"
-        />
+        <Image src={banner} className="w-full" alt="Agende agora!" />
         <PageSection>
           <PageSectionTitle>Agendamentos</PageSectionTitle>
           <BookingItem
