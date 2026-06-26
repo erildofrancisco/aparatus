@@ -1,54 +1,56 @@
+import Header from "@/_components/header";
 import Image from "next/image";
-import { Header } from "./_components/header";
-import { SearchInput } from "./_components/search-input";
-import banner from "../public/banner.png";
-import { BookingItem } from "./_components/booking-item";
-import { prisma } from "@/lib/prisma";
-import { BarbershopItem } from "./_components/barbershop-item";
-import { Footer } from "./_components/footer";
+import banner from "@/public/banner.png";
+import BookingItem from "@/_components/booking-item";
+
+import { getBarbershops, getPopularBarbershops } from "@/_data/barbershops";
+import { getUserBookings } from "@/_data/bookings";
+import BarbershopItem from "@/_components/barbershop-item";
 import {
   PageContainer,
   PageSection,
   PageSectionScroller,
   PageSectionTitle,
-} from "./_components/ui/page";
+} from "@/_components/ui/page";
+import Footer from "@/_components/footer";
+import QuickSearch from "@/_components/quick-search";
 
 export default async function Home() {
-  const recommendedBarbershops = await prisma.barbershop.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-  const popularBarbershops = await prisma.barbershop.findMany({
-    orderBy: {
-      name: "desc",
-    },
-  });
+  const barbershops = await getBarbershops();
+  const popularBarbershops = await getPopularBarbershops();
+  const { confirmedBookings } = await getUserBookings();
+
   return (
-    <main>
-      <Header />;
+    <div>
+      <Header />
       <PageContainer>
-        <SearchInput />
-        <Image src={banner} className="w-full" alt="Agende agora!" />
+        <QuickSearch />
+        <Image
+          src={banner}
+          alt="Agende nos melhores com a Aparatus"
+          sizes="100vw"
+          className="h-auto w-full"
+        />
+        {confirmedBookings.length > 0 && (
+          <PageSection>
+            <PageSectionTitle>Agendamentos</PageSectionTitle>
+            <PageSectionScroller>
+              {confirmedBookings.map((booking) => (
+                <BookingItem key={booking.id} booking={booking} />
+              ))}
+            </PageSectionScroller>
+          </PageSection>
+        )}
         <PageSection>
-          <PageSectionTitle>Agendamentos</PageSectionTitle>
-          <BookingItem
-            serviceName="Corte de cabelo"
-            barbershopName="Barbearia do joao"
-            barbershopImageUrl="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png"
-            date={new Date()}
-          />
-        </PageSection>
-        <PageSection>
-          <PageSectionTitle>Recomendados</PageSectionTitle>
+          <PageSectionTitle>Barbearias</PageSectionTitle>
           <PageSectionScroller>
-            {recommendedBarbershops.map((barbershop) => (
+            {barbershops.map((barbershop) => (
               <BarbershopItem key={barbershop.id} barbershop={barbershop} />
             ))}
           </PageSectionScroller>
         </PageSection>
         <PageSection>
-          <PageSectionTitle>Populares</PageSectionTitle>
+          <PageSectionTitle>Barbearias populares</PageSectionTitle>
           <PageSectionScroller>
             {popularBarbershops.map((barbershop) => (
               <BarbershopItem key={barbershop.id} barbershop={barbershop} />
@@ -57,6 +59,6 @@ export default async function Home() {
         </PageSection>
       </PageContainer>
       <Footer />
-    </main>
+    </div>
   );
 }

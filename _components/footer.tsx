@@ -1,4 +1,4 @@
-export function Footer() {
+const Footer = () => {
   return (
     <footer className="bg-muted p-7">
       <p className="text-foreground text-xs font-semibold">
@@ -9,4 +9,6 @@ export function Footer() {
       </p>
     </footer>
   );
-}
+};
+
+export default Footer;

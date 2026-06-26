@@ -2,7 +2,7 @@ import { SearchIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-export function SearchInput() {
+const SearchInput = () => {
   return (
     <div className="flex items-center gap-2">
       <Input
@@ -15,4 +15,6 @@ export function SearchInput() {
       </Button>
     </div>
   );
-}
+};
+
+export default SearchInput;

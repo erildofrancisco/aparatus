@@ -1,4 +1,4 @@
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "../generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const prisma = new PrismaClient({
@@ -21,7 +21,6 @@ async function seedDatabase() {
       "https://utfs.io/f/3bcf33fc-988a-462b-8b98-b811ee2bbd71-17k.png",
       "https://utfs.io/f/5788be0e-2307-4bb4-b603-d9dd237950a2-17l.png",
       "https://utfs.io/f/6b0888f8-b69f-4be7-a13b-52d1c0c9cab2-17m.png",
-      "https://utfs.io/f/ef45effa-415e-416d-8c4a-3221923cd10f-17n.png",
       "https://utfs.io/f/ef45effa-415e-416d-8c4a-3221923cd10f-17n.png",
       "https://utfs.io/f/a55f0f39-31a0-4819-8796-538d68cc2a0f-17o.png",
       "https://utfs.io/f/5c89f046-80cd-4443-89df-211de62b7c2a-17p.png",

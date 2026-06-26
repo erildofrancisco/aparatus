@@ -1,101 +1,72 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Phone, MapPin } from "lucide-react";
-import { prisma } from "@/lib/prisma";
-import { Button } from "@/app/_components/ui/button";
-import {
-  PageContainer,
-  PageSection,
-  PageSectionTitle,
-  PageSectionScroller,
-} from "@/app/_components/ui/page";
-import CopyPhoneButton from "./CopyPhoneButton";
-import ServiceItem from "@/app/_components/service-item";
+import { Smartphone } from "lucide-react";
+import { getBarbershopById } from "@/_data/barbershops";
+import { PageSectionTitle } from "@/_components/ui/page";
+import Footer from "@/_components/footer";
+import ServiceItem from "@/_components/service-item";
+import BackButton from "./_components/back-button";
+import CopyButton from "./_components/CopyPhoneButton";
 
-function formatPrice(cents: number) {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(cents / 100);
-}
-
-export default async function BarbershopPage(
-  props: PageProps<"/barbershops/[id]">,
-) {
-  const { id } = await props.params;
-  const barbershop = await prisma.barbershop.findUnique({
-    where: {
-      id,
-    },
-    include: { services: true },
-  });
+const BarbershopPage = async ({ params }: PageProps<"/barbershops/[id]">) => {
+  const { id } = await params;
+  const barbershop = await getBarbershopById(id);
 
   if (!barbershop) {
     notFound();
   }
 
   return (
-    <main className="bg-background text-foreground min-h-screen">
-      <PageContainer>
-        <div className="flex items-center justify-between gap-4 py-4">
-          <Link
-            href="/"
-            className="text-foreground inline-flex items-center gap-2 text-sm font-semibold"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar
-          </Link>
-          <Button variant="outline" size="sm" className="rounded-full">
-            Reservar
-          </Button>
+    <div>
+      {/* Banner Header */}
+      <div className="relative h-74.25 w-full">
+        <Image
+          src={barbershop.imageUrl}
+          alt={barbershop.name}
+          fill
+          className="object-cover"
+        />
+        <BackButton />
+      </div>
+
+      {/* Container */}
+      <div className="bg-background relative z-10 -mt-9 rounded-t-3xl">
+        {/* Barbershop Info */}
+        <div className="flex flex-col gap-1 px-5 pt-6">
+          <div className="flex items-center gap-1.5">
+            <div className="relative size-7.5 shrink-0">
+              <Image
+                src={barbershop.imageUrl}
+                alt={barbershop.name}
+                fill
+                className="rounded-full object-cover"
+              />
+            </div>
+            <h1 className="text-xl font-bold">{barbershop.name}</h1>
+          </div>
+          <p className="text-muted-foreground text-sm">{barbershop.address}</p>
         </div>
 
-        <div className="border-border bg-muted relative overflow-hidden rounded-3xl border shadow-sm">
-          <div className="relative h-72 w-full">
-            <Image
-              src={barbershop.imageUrl}
-              alt={barbershop.name}
-              fill
-              className="object-cover"
-              sizes="100vw"
-              loading="eager"
-            />
-          </div>
-          <div className="space-y-3 p-6">
-            <div className="flex flex-col gap-2">
-              <p className="text-muted-foreground text-sm tracking-[0.24em] uppercase">
-                Barbearia
-              </p>
-              <h1 className="text-foreground text-3xl font-bold">
-                {barbershop.name}
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                {barbershop.address}
-              </p>
-            </div>
-            <p className="text-foreground text-sm leading-6">
-              {barbershop.description}
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="text-foreground flex items-center gap-2 text-sm">
-                <MapPin className="h-4 w-4" />
-                <span>{barbershop.address}</span>
-              </div>
-              <div className="text-foreground flex items-center gap-2 text-sm">
-                <Phone className="h-4 w-4" />
-                <span>{barbershop.phones[0] ?? "Sem telefone"}</span>
-                {barbershop.phones[0] ? (
-                  <CopyPhoneButton phone={barbershop.phones[0]} />
-                ) : null}
-              </div>
-            </div>
-          </div>
+        {/* Divider */}
+        <div className="py-6">
+          <div className="bg-border h-px w-full" />
         </div>
 
-        <PageSection>
+        {/* Sobre Nós */}
+        <div className="flex flex-col gap-3 px-5">
+          <PageSectionTitle>Sobre Nós</PageSectionTitle>
+          <p className="text-sm">{barbershop.description}</p>
+        </div>
+
+        {/* Divider */}
+        <div className="py-6">
+          <div className="bg-border h-px w-full" />
+        </div>
+
+        {/* Serviços */}
+        <div className="flex flex-col gap-3 px-5">
           <PageSectionTitle>Serviços</PageSectionTitle>
-          <PageSectionScroller>
+          <div className="flex flex-col gap-3">
             {barbershop.services.map((service) => (
               <ServiceItem
                 key={service.id}
@@ -103,9 +74,34 @@ export default async function BarbershopPage(
                 barbershop={barbershop}
               />
             ))}
-          </PageSectionScroller>
-        </PageSection>
-      </PageContainer>
-    </main>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="py-6">
+          <div className="bg-border h-px w-full" />
+        </div>
+
+        {/* Contato */}
+        <div className="flex flex-col gap-3 px-5">
+          <PageSectionTitle>Contato</PageSectionTitle>
+          {barbershop.phones.map((phone, index) => (
+            <div key={index} className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <Smartphone className="size-6" />
+                <p className="text-sm">{phone}</p>
+              </div>
+              <CopyButton text={phone} />
+            </div>
+          ))}
+        </div>
+
+        {/* Footer spacing */}
+        <div className="pt-15" />
+      </div>
+      <Footer />
+    </div>
   );
-}
+};
+
+export default BarbershopPage;

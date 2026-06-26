@@ -1,11 +1,11 @@
 import Image from "next/image";
-import { Barbershop } from "../generated/prisma/client";
+import { Barbershop } from "@/generated/prisma/client";
 import Link from "next/link";
 
 interface BarbershopItemProps {
   barbershop: Barbershop;
 }
-export function BarbershopItem({ barbershop }: BarbershopItemProps) {
+const BarbershopItem = ({ barbershop }: BarbershopItemProps) => {
   return (
     <Link
       href={`/barbershops/${barbershop.id}`}
@@ -24,7 +24,6 @@ export function BarbershopItem({ barbershop }: BarbershopItemProps) {
       </div>
     </Link>
   );
-}
-{
-  /**o fill do image é usado para a img ocupar 100% da div pai */
-}
+};
+
+export default BarbershopItem;
