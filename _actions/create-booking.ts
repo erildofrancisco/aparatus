@@ -8,7 +8,7 @@ import { isPast } from "date-fns";
 
 // This schema is used to validate input from client.
 const inputSchema = z.object({
-  serviceId: z.string().cuid(),
+  serviceId: z.string(),
   date: z.date(),
 });
 

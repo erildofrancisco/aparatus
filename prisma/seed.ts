@@ -57,6 +57,19 @@ async function seedDatabase() {
       "Avenida Clássica, 707",
     ];
 
+    const coordinates = [
+      { latitude: -23.55052, longitude: -46.633308 },
+      { latitude: -23.55747, longitude: -46.66267 },
+      { latitude: -23.564, longitude: -46.6543 },
+      { latitude: -23.559616, longitude: -46.65812 },
+      { latitude: -23.5489, longitude: -46.6388 },
+      { latitude: -23.5455, longitude: -46.6355 },
+      { latitude: -23.553, longitude: -46.644 },
+      { latitude: -23.5458, longitude: -46.6359 },
+      { latitude: -23.5554, longitude: -46.6594 },
+      { latitude: -23.5512, longitude: -46.6397 },
+    ];
+
     const services = [
       {
         name: "Corte de Cabelo",
@@ -113,6 +126,8 @@ async function seedDatabase() {
         data: {
           name,
           address,
+          latitude: coordinates[i].latitude,
+          longitude: coordinates[i].longitude,
           imageUrl: imageUrl,
           phones: ["(11) 99999-9999", "(11) 99999-9999"],
           description:

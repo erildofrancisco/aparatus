@@ -56,7 +56,7 @@ export const createBookingCheckoutSession = protectedActionClient
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/bookings`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
       metadata: {
         serviceId: service.id,

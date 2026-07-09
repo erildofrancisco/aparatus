@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";
+import dynamic from "next/dynamic";
+import "leaflet/dist/leaflet.css";
 import { SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -31,12 +32,32 @@ interface BookingInfoSheetProps {
   onClose: () => void;
 }
 
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false },
+);
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false },
+);
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false },
+);
+const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
+  ssr: false,
+});
+
 const BookingInfoSheet = ({ booking, onClose }: BookingInfoSheetProps) => {
   const status = getBookingStatus(booking.date, booking.cancelledAt);
   const barbershopName = booking.barbershop?.name ?? "Barbearia";
   const barbershopPhones = booking.barbershop?.phones ?? [];
   const serviceName = booking.service?.name ?? "Serviço";
   const servicePrice = booking.service?.priceInCents ?? 0;
+  const latitude = booking.barbershop?.latitude;
+  const longitude = booking.barbershop?.longitude;
+  const hasCoordinates =
+    typeof latitude === "number" && typeof longitude === "number";
   const { executeAsync: executeCancelBooking, isPending: isCancelling } =
     useAction(cancelBooking);
 
@@ -65,14 +86,30 @@ const BookingInfoSheet = ({ booking, onClose }: BookingInfoSheetProps) => {
 
       <div className="flex flex-1 flex-col gap-6 px-5 py-6">
         <div className="relative h-45 w-full overflow-hidden rounded-lg">
-          <Image
-            src="/map.png"
-            alt="Mapa"
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover"
-          />
-          <div className="bg-background absolute right-5 bottom-5 left-5 flex items-center gap-3 rounded-lg px-5 py-3">
+          <div className="absolute inset-0 z-0">
+            {hasCoordinates ? (
+              <MapContainer
+                center={[latitude, longitude]}
+                zoom={16}
+                scrollWheelZoom={false}
+                className="h-full w-full"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[latitude, longitude]}>
+                  <Popup>{barbershopName}</Popup>
+                </Marker>
+              </MapContainer>
+            ) : (
+              <div className="bg-muted text-muted-foreground flex h-full w-full items-center justify-center text-sm">
+                Localização indisponível
+              </div>
+            )}
+          </div>
+
+          <div className="bg-background absolute right-5 bottom-5 left-5 z-10 flex items-center gap-3 rounded-lg px-5 py-3">
             <Avatar className="size-12">
               <AvatarImage src={booking.barbershop?.imageUrl ?? ""} />
             </Avatar>
