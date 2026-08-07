@@ -1,1 +1,0 @@
-- o fill do image é usado para a img ocupar 100% da div pai
