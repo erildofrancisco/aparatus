@@ -57,7 +57,7 @@ const MenuSheet = () => {
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col gap-6 py-6">
+        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto py-6">
           <div className="flex items-center justify-between px-5">
             {isLoggedIn ? (
               <div className="flex items-center gap-3">
@@ -129,7 +129,7 @@ const MenuSheet = () => {
           {isLoggedIn && (
             <Button
               variant="ghost"
-              className="justify-left w-fit text-left"
+              className="mt-auto ml-5 mr-5 w-fit justify-start text-left"
               onClick={handleLogout}
             >
               <LogOut className="size-4" />
