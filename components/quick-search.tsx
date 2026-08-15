@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { PageSectionScroller } from "./ui/page";
-import { Scissors, Sparkles, User, Eye, Footprints, Waves } from "lucide-react";
+import { Scissors, Eye, Footprints, Waves } from "lucide-react";
+import barba from "@/public/barba.png";
+import acabamento from "@/public/acabamento.png";
+import cabelo from "@/public/cabelo.png";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { SearchIcon } from "lucide-react";
@@ -13,7 +16,7 @@ const QuickSearch = () => {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
 
-  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+  const handleSearch = (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!searchValue.trim()) return;
     router.push(`/barbershops?search=${encodeURIComponent(searchValue.trim())}`);
@@ -37,7 +40,7 @@ const QuickSearch = () => {
           href="/barbershops?search=cabelo"
           className="border-border bg-card-background flex shrink-0 items-center justify-center gap-3 rounded-3xl border px-4 py-2"
         >
-          <Scissors className="size-4" />
+          <img src={cabelo.src} alt="Cabelo" className="w-[16] h-[14]" />
           <span className="text-card-foreground text-sm font-medium">
             Cabelo
           </span>
@@ -47,7 +50,7 @@ const QuickSearch = () => {
           href="/barbershops?search=barba"
           className="border-border bg-card-background flex shrink-0 items-center justify-center gap-3 rounded-3xl border px-4 py-2"
         >
-          <User className="size-4" />
+          <img src={barba.src} alt="Barba" className="w-4 h-[6]" />
           <span className="text-card-foreground text-sm font-medium">
             Barba
           </span>
@@ -57,7 +60,7 @@ const QuickSearch = () => {
           href="/barbershops?search=acabamento"
           className="border-border bg-card-background flex shrink-0 items-center justify-center gap-3 rounded-3xl border px-4 py-2"
         >
-          <Sparkles className="size-4" />
+          <img src={acabamento.src} alt="Acabamento" className="w-4 h-[6]" />
           <span className="text-card-foreground text-sm font-medium">
             Acabamento
           </span>
